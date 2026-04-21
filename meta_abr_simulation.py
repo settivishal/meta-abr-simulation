@@ -31,9 +31,9 @@ Output:
   - Saves results_summary.txt with full numerical results
 
 References:
-  [1] Huang et al. SIGCOMM 2014. https://dl.acm.org/doi/10.1145/2619239.2626296
-  [2] Yin et al. SIGCOMM 2015. https://conferences.sigcomm.org/sigcomm/2015/pdf/papers/p325.pdf
-  [3] Spiteri et al. INFOCOM 2016. https://arxiv.org/pdf/1601.06748
+  [3] Huang et al. SIGCOMM 2014. https://dl.acm.org/doi/10.1145/2619239.2626296
+  [4] Yin et al. SIGCOMM 2015. https://conferences.sigcomm.org/sigcomm/2015/pdf/papers/p325.pdf
+  [5] Spiteri et al. INFOCOM 2020. https://arxiv.org/pdf/1601.06748
   [6] Mao et al. SIGCOMM 2017. https://dl.acm.org/doi/10.1145/3098822.3098843
 """
 
