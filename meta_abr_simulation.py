@@ -393,7 +393,7 @@ def run_all_experiments():
 # FIGURE GENERATION
 # ─────────────────────────────────────────────────────────────────────────────
 
-def plot_figure1_qoe_bar(mq, sq, out_dir='.'):
+def plot_figure1_qoe_bar(mq, sq, out_dir='./figures'):
     """Figure 1: Mean QoE scores grouped by scenario."""
     fig, ax = plt.subplots(figsize=(13, 5))
     x = np.arange(len(SCENARIOS))
@@ -425,7 +425,7 @@ def plot_figure1_qoe_bar(mq, sq, out_dir='.'):
     print(f"  Saved {path}")
 
 
-def plot_figure2_rebuf_bar(mr, sr, out_dir='.'):
+def plot_figure2_rebuf_bar(mr, sr, out_dir='./figures'):
     """Figure 2: Rebuffering ratios grouped by scenario."""
     fig, ax = plt.subplots(figsize=(13, 5))
     x = np.arange(len(SCENARIOS))
@@ -456,7 +456,7 @@ def plot_figure2_rebuf_bar(mr, sr, out_dir='.'):
     print(f"  Saved {path}")
 
 
-def plot_figure3_session(out_dir='.'):
+def plot_figure3_session(out_dir='./figures'):
     """Figure 3: Per-session bitrate + buffer (Congested 4G trace)."""
     # Use the canonical Congested 4G trace (seed=77, trace 0)
     cfg   = next(c for c in SCENARIO_CONFIGS if c[0] == 'Congested 4G')
@@ -498,7 +498,7 @@ def plot_figure3_session(out_dir='.'):
     print(f"  Saved {path}")
 
 
-def plot_figure4_adaptation(out_dir='.'):
+def plot_figure4_adaptation(out_dir='./figures'):
     """Figure 4: Adaptation speed after mid-session regime change."""
     # First 30 chunks: Standard 4G (no dip); next 30: Congested 4G (immediate dip)
     cfg_std  = next(c for c in SCENARIO_CONFIGS if c[0] == 'Standard 4G')
@@ -532,7 +532,7 @@ def plot_figure4_adaptation(out_dir='.'):
     print(f"  Saved {path}")
 
 
-def plot_figure5_cdf(all_qoe, out_dir='.'):
+def plot_figure5_cdf(all_qoe, out_dir='./figures'):
     """Figure 5: CDF of per-session QoE (all scenarios + Congested 4G zoom)."""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
 
@@ -618,20 +618,26 @@ def main():
     print("CNT6885: Distributed Multimedia Systems, UF Spring 2026")
     print("=" * 60)
 
-    OUT_DIR = '.'    # output directory for figures and results
+    OUT_DIR = '.' # output directory
+
+    OUT_DIR_FIGURES = os.path.join(OUT_DIR, 'figures')
+    os.makedirs(OUT_DIR_FIGURES, exist_ok=True) # output directory for figures
+    
+    OUT_DIR_RESULTS = os.path.join(OUT_DIR, 'results')
+    os.makedirs(OUT_DIR_RESULTS, exist_ok=True) # output directory for results
 
     # 1. Run all experiments
     all_qoe, all_rebuf = run_all_experiments()
 
     # 2. Print and save results tables
     print("\nGenerating results tables...")
-    mq, sq, mr, sr = print_and_save_results(all_qoe, all_rebuf, OUT_DIR)
+    mq, sq, mr, sr = print_and_save_results(all_qoe, all_rebuf, OUT_DIR_RESULTS)
 
     # 3. Generate all 5 paper figures
     print("\nGenerating figures...")
-    plot_figure1_qoe_bar(mq, sq, OUT_DIR)
-    plot_figure2_rebuf_bar(mr, sr, OUT_DIR)
-    plot_figure3_session(OUT_DIR)
+    plot_figure1_qoe_bar(mq, sq, OUT_DIR_FIGURES)
+    plot_figure2_rebuf_bar(mr, sr, OUT_DIR_FIGURES)
+    plot_figure3_session(OUT_DIR_FIGURES)
 
     # Figure 4 has a minor syntax issue with the text placement — fix inline:
     cfg_std  = next(c for c in SCENARIO_CONFIGS if c[0] == 'Standard 4G')
@@ -657,12 +663,12 @@ def main():
     ax.grid(alpha=0.3)
     ax.set_xlim(1, N_CHUNKS)
     plt.tight_layout()
-    fig4_path = os.path.join(OUT_DIR, 'fig4_adapt.png')
+    fig4_path = os.path.join(OUT_DIR_FIGURES, 'fig4_adapt.png')
     plt.savefig(fig4_path, dpi=150, bbox_inches='tight')
     plt.close()
     print(f"  Saved {fig4_path}")
 
-    plot_figure5_cdf(all_qoe, OUT_DIR)
+    plot_figure5_cdf(all_qoe, OUT_DIR_FIGURES)
 
     print("\nAll done. Files generated:")
     for fname in ['fig1_qoe_bar.png', 'fig2_rebuf_bar.png', 'fig3_session.png',
